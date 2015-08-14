@@ -6,7 +6,8 @@
 
 int **initMatrix() {
     int **matrix = (int**) malloc(sizeof(int*) * L);
-    for (int i = 0; i < L; i++) {
+    int i;
+    for (i = 0; i < L; i++) {
         matrix[i] = (int*) malloc(sizeof(int) * L);
     }
 
@@ -18,9 +19,11 @@ int **multiplyMatrix(int **m1, int **m2) {
 
     int **resultantMatrix = initMatrix();
 
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
-            for (int k = 0; k < L; k++)
+    int i, j, k;
+
+    for (i = 0; i < L; i++) {
+        for (j = 0; j < L; j++) {
+            for (k = 0; k < L; k++)
                 total += m1[i][k] * m2[k][j];
 
             resultantMatrix[i][j] = total;
@@ -35,8 +38,10 @@ int **sumMatrix(int **m1, int **m2) {
 
     int **resultantMatrix = initMatrix();
 
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
+    int i, j;
+
+    for (i = 0; i < L; i++) {
+        for (j = 0; j < L; j++) {
             resultantMatrix[i][j] = m1[i][j] + m2[i][j];
         }
     }
@@ -97,14 +102,16 @@ int main() {
 
     printf("----------------- Matrix Resultante --------------------\n");
 
-    int **matrixResult = multiplyMatrix(matrixA, matrixC);
-    matrixResult = sumMatrix(matrixResult, matrixB);
+    extern int **multiply_asm(int**, int**);
+
+    int **matrixResult = multiply_asm(matrixA, matrixC);
+    //matrixResult = sumMatrix(matrixResult, matrixB);
 
     printMatrix(matrixResult);
 
     int soma = 0;
 
-    for (int i = 0; i < L; i++) {
+    for (i = 0; i < L; i++) {
         soma += matrixResult[i][i];
     }
 

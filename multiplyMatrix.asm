@@ -12,6 +12,12 @@ addr2:	DW	0
 	push	eax
 	push	ecx
 
+	mov	eax, %1
+	mov	ecx, %2
+	mul	cl
+
+	mov	ebx, eax
+
 	pop	ecx
 	pop	eax
 %endmacro
@@ -67,15 +73,19 @@ loop1:
 			push	edx
 			push	ebx
 
-			mov	ebx
+			mov	ebx, [ebp + 24]
+			mov	edx, [l]
 
-			multiply	cl, [l]
-			add	ebx, esi
+			multiply	ebx, edx
+			add	ebx, [ebp + 32]
 			mov	edx, [addr1]
 			mov	al, [edx + ebx]
 
-			multiply	esi, [l]
-			add	ebx, ch
+			mov	ebx, [ebp + 32]
+			mov	edx, [l]
+
+			multiply	ebx, edx
+			add	ebx, [ebp + 28]
 			mov	edx, [addr2]
 			mov	ah, [edx + ebx]
 
@@ -83,14 +93,46 @@ loop1:
 			pop	edx
 
 			mul	ah
-			add	edx, eax
+			add	ebx, eax
 
-			inc	esi
+			push	eax
+			mov	eax, [ebp + 32]
+			inc	eax
+			mov	[ebp + 32], eax
+			pop	eax
+			
 			jmp	loop_comp3
 
 		end3:
+			
+		push	eax
+		push	ecx
 
+		mov	eax, [ebp + 24]
+		mov	ecx, [l]
+		push	ebx
+		multiply	eax, ecx
+		mov	eax, ebx
+		pop	ebx
+
+		add	eax, [ebp + 28]
+
+		add	eax, edx
+
+		mov	[eax], ebx
+
+		pop	ecx
+		pop	eax
+
+		mov	ebx, 0
+
+		jmp	loop_comp2
 
 	end2:
+
+	jmp	loop_comp1
 end:
+	mov	eax, edx
+	mov	esp, ebp
+	pop	ebp
 	ret
