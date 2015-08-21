@@ -102,12 +102,15 @@ int main() {
 
     printf("----------------- Matrix Resultante --------------------\n");
 
-    extern int **multiply_asm(int**, int**);
+//    extern int **multiply_asm(int**, int**, int**, int);
+    extern int multiply_asm(int**, int**, int**, int);
 
-    int **matrixResult = multiply_asm(matrixA, matrixC);
-    //matrixResult = sumMatrix(matrixResult, matrixB);
+    int **matrixResult= initMatrix();
+//    matrixResult = multiply_asm(matrixA, matrixC, matrixResult, L);
 
-    printMatrix(matrixResult);
+//    printMatrix(matrixResult);
+
+    printf("RESULT: %d\n", multiply_asm(matrixA, matrixC, matrixResult, L));
 
     int soma = 0;
 
