@@ -3,8 +3,55 @@
 l:	DB	0
 addr1:	DW	0
 addr2:	DW	0
+base:	DB	10
+pilha:	TIMES 10	DB ' '
+topo:
+
 
 	SECTION .text
+
+%macro	pushi	2
+	dec	%2
+	mov	[%2], %1
+%endmacro
+
+
+%macro	print	1
+	pusha
+	mov	ax, %1
+	mov	bl, [base]
+
+	mov	ecx, topo
+
+	cmp	ax, 0
+	jne	loop_comp
+	mov	dl, 48
+	pushi	dl, ecx
+	jmp	end_print
+
+loop:
+	div	bl
+	
+	mov	dl, ah
+	add	dl, 48
+
+	pushi	dl, ecx
+
+	xor	ah, ah
+
+loop_comp:
+	cmp	al, 0
+	jne	loop
+
+	mov	edx, topo
+	sub	edx, ecx
+
+end_print:
+	mov	ebx, 1
+	mov	eax, 4
+	int	0x80
+	popa
+%endmacro
 
 	global	multiply_asm
 
@@ -42,6 +89,9 @@ multiply_asm:
 	mov	edx, [ebp + 16] ;matriz resultante
 
 	mov	ecx, [ebp + 20] ;tamanho das matrizes
+
+	add	cl, cl
+	add	cl, cl
 	mov	[l], cl
 
 	;contadores
@@ -98,11 +148,10 @@ loop1:
 
 			push    eax
 			mov     eax, [ebp - 12]
-			inc     eax
+			add     eax, 4
 			mov     [ebp - 12], eax
 			pop     eax
 
-			jmp	end
 			jmp	loop_comp3
 
 		end3:
@@ -130,7 +179,7 @@ loop1:
 
 		push    eax
 		mov     eax, [ebp - 8]
-		inc     eax
+		add     eax, 4
 		mov     [ebp - 8], eax
 		pop     eax
 
@@ -145,13 +194,13 @@ loop1:
 
 	push    eax
 	mov     eax, [ebp - 4]
-	inc     eax
+	add     eax, 4
 	mov     [ebp - 4], eax
 	pop     eax
 
 	jmp	loop_comp1
 end:
-	mov	eax, [ebp - 12]
+	mov	eax, edx
 	mov	esp, ebp
 	pop	ebp
 	ret

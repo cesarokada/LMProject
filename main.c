@@ -100,17 +100,18 @@ int main() {
     buildMatrix(matrixC);
     printMatrix(matrixC);
 
-    printf("----------------- Matrix Resultante --------------------\n");
+    printf("----------------- Matrix C --------------------\n");
 
-//    extern int **multiply_asm(int**, int**, int**, int);
-    extern int multiply_asm(int**, int**, int**, int);
+    printMatrix(multiplyMatrix(matrixA, matrixC));
 
-    int **matrixResult= initMatrix();
-//    matrixResult = multiply_asm(matrixA, matrixC, matrixResult, L);
+    printf("----------------- Matrix ASM --------------------\n");
 
-//    printMatrix(matrixResult);
+    extern int **multiply_asm(int**, int**, int**, int);
 
-    printf("RESULT: %d\n", multiply_asm(matrixA, matrixC, matrixResult, L));
+    int **matrixResult = initMatrix();
+    matrixResult = multiply_asm(matrixA, matrixC, matrixResult, L);
+
+    printMatrix(matrixResult);
 
     int soma = 0;
 
