@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define L 3
+#define L 10
 
 int **initMatrix() {
     int **matrix = (int**) malloc(sizeof(int*) * L);
