@@ -86,9 +86,9 @@ multiply_asm:
 	;mov	ebx, [ebp + 12] ;matriz 2
 	;mov	[addr2], ebx
 
-	mov	edx, [ebp + 16] ;matriz resultante
+	mov	edx, [ebp + 20] ;matriz resultante
 
-	mov	ecx, [ebp + 20] ;tamanho das matrizes
+	mov	ecx, [ebp + 24] ;tamanho das matrizes
 
 	add	cl, cl
 	add	cl, cl
@@ -164,13 +164,22 @@ loop1:
 		push	eax
 		push	ecx
 
-		mov	eax, [ebp + 16]
+		mov	eax, [ebp + 20]
 		add	eax, [ebp - 4]
 		
 		mov	eax, [eax]
 		add	eax, [ebp - 8]
 
-		mov	[eax], ebx
+		mov	ecx, [ebp + 16]
+		add	ecx, [ebp - 4]
+
+		mov	ecx, [ecx]
+		add	ecx, [ebp - 8]
+
+		mov	ecx, [ecx]
+		add	ecx, ebx
+
+		mov	[eax], ecx
 
 		pop	ecx
 		pop	eax

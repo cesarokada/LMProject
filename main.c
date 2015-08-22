@@ -106,10 +106,10 @@ int main() {
 
     printf("----------------- Matrix ASM --------------------\n");
 
-    extern int **multiply_asm(int**, int**, int**, int);
+    extern int **multiply_asm(int**, int**, int**, int**, int);
 
     int **matrixResult = initMatrix();
-    matrixResult = multiply_asm(matrixA, matrixC, matrixResult, L);
+    matrixResult = multiply_asm(matrixA, matrixC, matrixB, matrixResult, L);
 
     printMatrix(matrixResult);
 
