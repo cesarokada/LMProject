@@ -49,6 +49,17 @@ int **sumMatrix(int **m1, int **m2) {
     return resultantMatrix;
 }
 
+int diagonal(int **m) {
+    int sum = 0, i, j;
+
+    for (i = 0; i < L; i++)
+        for (j = 0; j < L; j++)
+            if (i == j)
+                sum += m[i][j];
+
+    return sum;
+}
+
 void buildMatrix(int** matrix) {
     int i, j;
 
@@ -100,22 +111,31 @@ int main() {
     buildMatrix(matrixC);
     printMatrix(matrixC);
 
-    printf("----------------- Matrix C --------------------\n");
+    printf("----------------- Codigo C --------------------\n");
 
-    printMatrix(multiplyMatrix(matrixA, matrixC));
+    //init tempo
+    int **cResult = sumMatrix(multiplyMatrix(matrixA, matrixC), matrixB);
+    int cDiagonal = diagonal(cResult);
+    //end tempo
 
-    printf("----------------- Matrix ASM --------------------\n");
+    printMatrix(cResult);
 
-    int d = 0;
+    printf("Soma da diagonal: %d\n", cDiagonal);
+
+    printf("----------------- Matrix Codigo ASM --------------------\n");
+
+    int asmDiagonal = 0;
+    int **asmResult = initMatrix();
 
     extern int **multiply_asm(int**, int**, int**, int**, int*, int);
 
-    int **matrixResult = initMatrix();
-    matrixResult = multiply_asm(matrixA, matrixC, matrixB, matrixResult, &d, L);
+    //init tempo
+    asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    //end tempo
 
-    printMatrix(matrixResult);
+    printMatrix(asmResult);
 
-    printf("EIS A PORRA DA SOMA: %3d\n\n", d);
+    printf("Soma da diagonal: %d\n", asmDiagonal);
 
     return 0;
 }
