@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define L 10
+#define L 3
 
 int **initMatrix() {
     int **matrix = (int**) malloc(sizeof(int*) * L);
@@ -106,20 +106,16 @@ int main() {
 
     printf("----------------- Matrix ASM --------------------\n");
 
-    extern int **multiply_asm(int**, int**, int**, int**, int);
+    int d = 0;
+
+    extern int **multiply_asm(int**, int**, int**, int**, int*, int);
 
     int **matrixResult = initMatrix();
-    matrixResult = multiply_asm(matrixA, matrixC, matrixB, matrixResult, L);
+    matrixResult = multiply_asm(matrixA, matrixC, matrixB, matrixResult, &d, L);
 
     printMatrix(matrixResult);
 
-    int soma = 0;
-
-    for (i = 0; i < L; i++) {
-        soma += matrixResult[i][i];
-    }
-
-    printf("EIS A PORRA DA SOMA: %3d\n\n", soma);
+    printf("EIS A PORRA DA SOMA: %3d\n\n", d);
 
     return 0;
 }

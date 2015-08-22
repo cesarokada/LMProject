@@ -1,57 +1,8 @@
 	SECTION .data
 
 l:	DB	0
-addr1:	DW	0
-addr2:	DW	0
-base:	DB	10
-pilha:	TIMES 10	DB ' '
-topo:
-
 
 	SECTION .text
-
-%macro	pushi	2
-	dec	%2
-	mov	[%2], %1
-%endmacro
-
-
-%macro	print	1
-	pusha
-	mov	ax, %1
-	mov	bl, [base]
-
-	mov	ecx, topo
-
-	cmp	ax, 0
-	jne	loop_comp
-	mov	dl, 48
-	pushi	dl, ecx
-	jmp	end_print
-
-loop:
-	div	bl
-	
-	mov	dl, ah
-	add	dl, 48
-
-	pushi	dl, ecx
-
-	xor	ah, ah
-
-loop_comp:
-	cmp	al, 0
-	jne	loop
-
-	mov	edx, topo
-	sub	edx, ecx
-
-end_print:
-	mov	ebx, 1
-	mov	eax, 4
-	int	0x80
-	popa
-%endmacro
 
 	global	multiply_asm
 
@@ -80,23 +31,13 @@ multiply_asm:
 	push	eax ;posicao -8
 	push	eax ;posicao -12
 
-	;mov	eax, [ebp + 8] ;matriz 1
-	;mov	[addr1], eax
-
-	;mov	ebx, [ebp + 12] ;matriz 2
-	;mov	[addr2], ebx
-
 	mov	edx, [ebp + 20] ;matriz resultante
 
-	mov	ecx, [ebp + 24] ;tamanho das matrizes
+	mov	ecx, [ebp + 28] ;tamanho das matrizes
 
 	add	cl, cl
 	add	cl, cl
 	mov	[l], cl
-
-	;contadores
-	mov	ecx, 0
-	mov	esi, 0
 
 loop_comp1:
 	mov	eax, [ebp - 4]
@@ -180,6 +121,23 @@ loop1:
 		add	ecx, ebx
 
 		mov	[eax], ecx
+
+		push	eax
+		push	ebx
+
+		mov	eax, [ebp - 4]
+		mov	ebx, [ebp - 8]
+
+		cmp	eax, ebx
+		jne	not_d
+
+		mov	eax, [ebp + 24]
+		mov	ebx, [eax]
+		add	ebx, ecx
+		mov	[eax], ebx
+
+not_d:		pop	ebx
+		pop	eax
 
 		pop	ecx
 		pop	eax
