@@ -127,10 +127,12 @@ int main() {
     int asmDiagonal = 0;
     int **asmResult = initMatrix();
 
-    extern int **multiply_asm(int**, int**, int**, int**, int*, int);
+    //extern int **multiply_asm(int**, int**, int**, int**, int*, int);
+    extern int **multiply_gas(int**, int**, int**, int**, int*, int);
 
     //init tempo
-    asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    //asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    asmResult = multiply_gas(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
     //end tempo
 
     printMatrix(asmResult);
