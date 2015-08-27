@@ -80,6 +80,10 @@ void printMatrix(int** matrix) {
 }
 
 int main() {
+
+    struct timeval stop, start;
+    float tmili;
+
     srand(time(NULL));
 
     int i;
@@ -113,14 +117,24 @@ int main() {
 
     printf("----------------- Codigo C --------------------\n");
 
+    int **cResult;
+    int cDiagonal;
+
     //init tempo
-    int **cResult = sumMatrix(multiplyMatrix(matrixA, matrixC), matrixB);
-    int cDiagonal = diagonal(cResult);
+    gettimeofday(&start,NULL);
+
+    for(i = 0; i < 1500000; i++){
+        cResult = sumMatrix(multiplyMatrix(matrixA, matrixC), matrixB);
+        cDiagonal = diagonal(cResult);
+    }
+    gettimeofday(&stop,NULL);
+    tmili = (1000 * (stop.tv_sec - start.tv_sec) + (stop.tv_usec - start.tv_usec) / 1000);
     //end tempo
 
     printMatrix(cResult);
 
     printf("Soma da diagonal: %d\n", cDiagonal);
+    printf("Tempo para processamento %.6f\n",tmili);
 
     printf("----------------- Matrix Codigo ASM --------------------\n");
 
@@ -132,7 +146,7 @@ int main() {
 
     //init tempo
     //asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
-    asmResult = multiply_gas(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    //asmResult = multiply_gas(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
     //end tempo
 
     printMatrix(asmResult);
