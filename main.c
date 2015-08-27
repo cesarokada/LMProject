@@ -128,31 +128,44 @@ int main() {
         cDiagonal = diagonal(cResult);
     }
     gettimeofday(&stop,NULL);
+
     tmili = (1000 * (stop.tv_sec - start.tv_sec) + (stop.tv_usec - start.tv_usec) / 1000);
     //end tempo
 
     printMatrix(cResult);
 
     printf("Soma da diagonal: %d\n", cDiagonal);
-    printf("Tempo para processamento %.6f\n",tmili);
+    printf("Tempo de processamento em C: %.6f\n",tmili);
 
     printf("----------------- Matrix Codigo ASM --------------------\n");
 
     int asmDiagonal = 0;
     int **asmResult = initMatrix();
 
-    //extern int **multiply_asm(int**, int**, int**, int**, int*, int);
-    extern int **multiply_gas(int**, int**, int**, int**, int*, int);
+    extern int **multiply_asm(int**, int**, int**, int**, int*, int);
 
     //init tempo
-    //asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
-    //asmResult = multiply_gas(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    gettimeofday(&start,NULL);
+    for(i = 0; i < 1500000; i++){
+        asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
+    }
+
+    gettimeofday(&stop,NULL);
+    tmili = (1000 * (stop.tv_sec - start.tv_sec) + (stop.tv_usec - start.tv_usec) / 1000);
     //end tempo
 
     printMatrix(asmResult);
 
-    printf("Soma da diagonal: %d\n", asmDiagonal);
+    printf("Soma da diagonal NASM: %d\n", asmDiagonal);
+    printf("Tempo de processamento em NASM: %.6f\n",tmili);
+    /*printf("----------------- Matrix Codigo GAS --------------------\n");
 
+    int gasDiagonal = 0;
+    int **gasResult = initMatrix();
+
+    extern int **multiply_gas(int**, int**, int**, int**, int*, int);
+
+    asmResult = multiply_gas(matrixA, matrixC, matrixB, gasResult, &gasDiagonal, L);*/
     return 0;
 }
 
