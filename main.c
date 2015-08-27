@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define L 3
+#define L 20
+#define iteration 1000
 
 int **initMatrix() {
     int **matrix = (int**) malloc(sizeof(int*) * L);
@@ -123,7 +124,7 @@ int main() {
     //init tempo
     gettimeofday(&start,NULL);
 
-    for(i = 0; i < 1500000; i++){
+    for(i = 0; i < iteration; i++){
         cResult = sumMatrix(multiplyMatrix(matrixA, matrixC), matrixB);
         cDiagonal = diagonal(cResult);
     }
@@ -146,11 +147,13 @@ int main() {
 
     //init tempo
     gettimeofday(&start,NULL);
-    for(i = 0; i < 1500000; i++){
+    for(i = 0; i < iteration; i++){
+        asmDiagonal = 0;
         asmResult = multiply_asm(matrixA, matrixC, matrixB, asmResult, &asmDiagonal, L);
     }
 
     gettimeofday(&stop,NULL);
+
     tmili = (1000 * (stop.tv_sec - start.tv_sec) + (stop.tv_usec - start.tv_usec) / 1000);
     //end tempo
 
@@ -158,14 +161,31 @@ int main() {
 
     printf("Soma da diagonal NASM: %d\n", asmDiagonal);
     printf("Tempo de processamento em NASM: %.6f\n",tmili);
-    /*printf("----------------- Matrix Codigo GAS --------------------\n");
+
+    printf("----------------- Matrix Codigo GAS --------------------\n");
 
     int gasDiagonal = 0;
     int **gasResult = initMatrix();
 
     extern int **multiply_gas(int**, int**, int**, int**, int*, int);
 
-    asmResult = multiply_gas(matrixA, matrixC, matrixB, gasResult, &gasDiagonal, L);*/
+    gettimeofday(&start,NULL);
+
+    for(i = 0; i < iteration; i++){
+        gasDiagonal = 0;
+        gasResult = multiply_gas(matrixA, matrixC, matrixB, gasResult, &gasDiagonal, L);
+    }
+
+    gettimeofday(&stop,NULL);
+
+    tmili = (1000 * (stop.tv_sec - start.tv_sec) + (stop.tv_usec - start.tv_usec) / 1000);
+    //end tempo
+
+    printMatrix(gasResult);
+
+    printf("Soma da diagonal GAS: %d\n", gasDiagonal);
+    printf("Tempo de processamento em GAS: %.6f\n",tmili);
+
     return 0;
 }
 
